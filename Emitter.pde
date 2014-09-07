@@ -27,19 +27,17 @@ class Emitter {
     accelMean = accelMean_;
     friction = friction_;
     cycle = cycle_;
+    colorVals = cycle.update();
     savedTime = millis();
     initParticles();
   }
   
   void draw() {
-    
+
     for(i = 0; i < particles.length; i++) {
-      colorVals = cycle.update();
-      stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
       if(particles[i].position.x > width || particles[i].position.x < 0) {
         // Remove particles here
       }
-      
       pushMatrix();
       translate(position.x, position.y);
       particles[i].draw();
@@ -61,18 +59,22 @@ class Emitter {
   }
   
   void emitParticle() {
-      PVector pVelocity = new PVector(random(-3, 3), random(-3, 3));
-      PVector pAcceleration = new PVector(random(-0.100, 0.100), random(-0.100, 0.100));
+      PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
+      PVector pAcceleration = new PVector(random(-0.200, 0.200), random(-0.200, 0.200));
       float pFriction = friction;
-
-      particles = (Particle[]) append(particles, new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction));
+      int strokeWeight = (int)random(1, 50);
+      
+      colorVals = cycle.update();
+      particles = (Particle[]) append(particles, new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction, colorVals, strokeWeight));
   }
   
   void initParticles() {
-    PVector pVelocity = new PVector(random(-3, 3), random(-3, 3));
-    PVector pAcceleration = new PVector(random(-0.100, 0.100), random(-0.100, 0.100));
+    PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
+    PVector pAcceleration = new PVector(random(-0.200, 0.200), random(-0.200, 0.200));
     float pFriction = friction;
+    int strokeWeight = (int)random(1, 50);
     
-    particles[0] = new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction);
+    colorVals = cycle.update();
+    particles[0] = new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction, colorVals, strokeWeight);
   }  
 }
