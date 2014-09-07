@@ -30,6 +30,6 @@ void draw() {
     emitters[i].update();
     emitters[i].draw();
     popMatrix();
-    //saveFrame("RainbowPart/frames######.png");
+    //saveFrame("RainbowPartSmall/frames######.png");
   }  
 }
