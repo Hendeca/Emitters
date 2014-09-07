@@ -62,7 +62,7 @@ class Emitter {
       PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
       PVector pAcceleration = new PVector(random(-0.200, 0.200), random(-0.200, 0.200));
       float pFriction = friction;
-      int strokeWeight = (int)random(1, 50);
+      int strokeWeight = (int)random(1, 10);
       
       colorVals = cycle.update();
       particles = (Particle[]) append(particles, new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction, colorVals, strokeWeight));
@@ -72,7 +72,7 @@ class Emitter {
     PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
     PVector pAcceleration = new PVector(random(-0.200, 0.200), random(-0.200, 0.200));
     float pFriction = friction;
-    int strokeWeight = (int)random(1, 50);
+    int strokeWeight = (int)random(1, 10);
     
     colorVals = cycle.update();
     particles[0] = new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction, colorVals, strokeWeight);
