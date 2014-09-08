@@ -26,14 +26,14 @@ public void setup() {
   frameRate(29.97f);
   size(1440, 900);
   background(0);
-  emitters = new Emitter[20];
+  emitters = new Emitter[8];
   initEmitters();
 }
 
 public void initEmitters() {
   for ( i = 0; i < emitters.length; i++) {
    
-   emitters[i] = new Emitter(new PVector(0, 0), new PVector(random(-0.02f, 0.02f),0), new PVector(0, 0), new PVector(3.0f,3.0f), new PVector(1.0f, 1.0f), new PVector(0.02f, 0.02f), new PVector(0.1f, 0.1f), random(0.96f, 0.99f), random(50, 100), new ColorCycle(random(0.2f, 0.4f), 0, 2, 4, random(50, 255)));
+   emitters[i] = new Emitter(new PVector(0, 0), new PVector(random(-0.02f, 0.02f),0), new PVector(0, 0), new PVector(3.0f,3.0f), new PVector(1.0f, 1.0f), new PVector(0.02f, 0.02f), new PVector(0.1f, 0.1f), random(0.995f, 0.999f), random(10, 30), new ColorCycle(random(0.1f, 0.25f), 0, 2, 4, random(180, 220)));
   
   }
 }
@@ -130,6 +130,8 @@ class Emitter {
         }
         pushMatrix();
         translate(position.x, position.y);
+        particle.update();
+        particle.oscillate();
         particle.draw();
         popMatrix();
       }
@@ -151,64 +153,81 @@ class Emitter {
   }
   
   public void emitParticle() {
-      PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
-      PVector pAcceleration = new PVector(random(-0.200f, 0.200f), random(-0.200f, 0.200f));
+      float pVelocity = random(2, 4);
+      float pAcceleration = random(-0.02f, 0.02f);
       float pFriction = friction;
-      float frequency = 0.5f;
-      float amplitude = 10;
-      int strokeWeight = (int)random(1, 10);
+      float period = 50;
+      float amplitude = 2;
+      float angle = round(random(-180, 180) / 22.5f) * 22.5f;
+      int strokeWeight = (int)random(5, 15);
       
       colorVals = cycle.update();
-      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, frequency, amplitude, pFriction, colorVals, strokeWeight));
+      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, angle, period, amplitude, pFriction, colorVals, strokeWeight));
   }
 }
 class Particle {
 
   int strokeWeight,
-      t = 0; // Time
+      t = 0,
+      savedTime = millis(); // Time
   PVector position, // The x, y pixel coordinates of the particle
-          velocity, // Velocity in pixels per frame of the particle
-          acceleration,
-          newPosition; // Acceleration in pixels per frame squared
-  float friction,
-        slope,
-        angle,
+          velocity,
+          sineVel; // Acceleration in pixels per frame squared
+  float friction, // Amount of friction acting on the particle
         frequency,
-        amplitude; // Amount of friction acting on the particle
+        amplitude,
+        angle,
+        acceleration,
+        fadeRate = 3;
   float[] colorVals;
   
-  Particle(PVector position_, PVector velocity_, PVector acceleration_, float frequency_, float amplitude_, float friction_, float[] colorVals_, int strokeWeight_) {
+  Particle(PVector position_, float velocity_, float acceleration_, float angle_, float frequency_, float amplitude_, float friction_, float[] colorVals_, int strokeWeight_) {
     
     colorVals = colorVals_;
     strokeWeight = strokeWeight_;
     position = position_;
-    velocity = velocity_;
+    angle = angle_;
+    velocity = new PVector(velocity_ * sin(angle), velocity_ * cos(angle));
     acceleration = acceleration_;
     friction = friction_;
     frequency = frequency_;
     amplitude = amplitude_;
-    slope = velocity.x / velocity.y;
-    angle = atan(slope);
   }
   
   public void draw() {
-    update();
     pushMatrix();
     strokeWeight(strokeWeight);
+    translate(position.x, position.y);
     stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
-    popMatrix();
-    pushMatrix();
-    rotate(radians(angle));
-    position.add(new PVector(0, sin(t * frequency) * amplitude));
-    point(position.x, position.y);
+    point(0, 0);
     popMatrix();
     t++;
   }
   
   public void update() {
-    velocity.add(acceleration);
+
     position.add(velocity);
-    position.mult(friction);
+    if(friction > 0) {
+      position.mult(friction);
+    }
+    
+  }
+
+  public void oscillate() {
+
+    sineVel = new PVector((amplitude * sin((angle + 90)) * sin(t / (1 / frequency))), (amplitude * cos((angle + 90)) * sin(t / (1 / frequency))));
+    position.add(sineVel);
+
+  }
+
+  public void fade() {
+    colorVals[3] -= fadeRate;
+  }
+
+  public void updateColor(float[] colorVals_) {
+
+    colorVals = colorVals_;
+
   }
 }
 class RNG {
@@ -226,7 +245,7 @@ class RNG {
   
 }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#666666", "--stop-color=#cccccc", "Emitters" };
+    String[] appletArgs = new String[] { "Emitters" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

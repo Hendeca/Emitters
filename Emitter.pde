@@ -48,6 +48,8 @@ class Emitter {
         }
         pushMatrix();
         translate(position.x, position.y);
+        particle.update();
+        particle.oscillate();
         particle.draw();
         popMatrix();
       }
@@ -69,14 +71,15 @@ class Emitter {
   }
   
   void emitParticle() {
-      PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
-      PVector pAcceleration = new PVector(random(-0.200, 0.200), random(-0.200, 0.200));
+      float pVelocity = random(2, 4);
+      float pAcceleration = random(-0.02, 0.02);
       float pFriction = friction;
-      float frequency = 0.5;
-      float amplitude = 10;
-      int strokeWeight = (int)random(1, 10);
+      float period = 50;
+      float amplitude = 2;
+      float angle = round(random(-180, 180) / 22.5) * 22.5;
+      int strokeWeight = (int)random(5, 15);
       
       colorVals = cycle.update();
-      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, frequency, amplitude, pFriction, colorVals, strokeWeight));
+      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, angle, period, amplitude, pFriction, colorVals, strokeWeight));
   }
 }
