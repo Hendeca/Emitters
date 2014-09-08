@@ -33,11 +33,7 @@ class Particle {
     strokeWeight(strokeWeight);
     stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
     popMatrix();
-    pushMatrix();
-    rotate(radians(angle));
-    position.add(new PVector(0, sin(t * frequency) * amplitude));
     point(position.x, position.y);
-    popMatrix();
     t++;
   }
   
