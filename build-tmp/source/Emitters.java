@@ -24,7 +24,7 @@ RNG rng = new RNG();
 
 public void setup() {
   frameRate(29.97f);
-  size(2560, 1440);
+  size(1440, 900);
   background(0);
   emitters = new Emitter[20];
   initEmitters();
@@ -33,7 +33,7 @@ public void setup() {
 public void initEmitters() {
   for ( i = 0; i < emitters.length; i++) {
    
-   emitters[i] = new Emitter(new PVector(0, 0), new PVector(random(-0.02f, 0.02f),0), new PVector(0, 0), new PVector(3.0f,3.0f), new PVector(1.0f, 1.0f), new PVector(0.02f, 0.02f), new PVector(0.1f, 0.1f), random(0.96f, 0.99f), random(50, 100), new ColorCycle(random(1, 2), 0, 2, 4, random(50, 255)));
+   emitters[i] = new Emitter(new PVector(0, 0), new PVector(random(-0.02f, 0.02f),0), new PVector(0, 0), new PVector(3.0f,3.0f), new PVector(1.0f, 1.0f), new PVector(0.02f, 0.02f), new PVector(0.1f, 0.1f), random(0.96f, 0.99f), random(50, 100), new ColorCycle(random(0.2f, 0.4f), 0, 2, 4, random(50, 255)));
   
   }
   
@@ -48,7 +48,7 @@ public void draw() {
     emitters[i].update();
     emitters[i].draw();
     popMatrix();
-    saveFrame("RainbowPartSmall/frames######.png");
+    //saveFrame("RainbowPartSmall/frames######.png");
   }  
 }
 class ColorCycle {
@@ -156,22 +156,30 @@ class Emitter {
       PVector pVelocity = new PVector(random(-6, 6), random(-6, 6));
       PVector pAcceleration = new PVector(random(-0.200f, 0.200f), random(-0.200f, 0.200f));
       float pFriction = friction;
+      float frequency = 0.5f;
+      float amplitude = 10;
       int strokeWeight = (int)random(1, 10);
       
       colorVals = cycle.update();
-      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, pFriction, colorVals, strokeWeight));
+      particles.add(new Particle(new PVector(0, 0), pVelocity, pAcceleration, frequency, amplitude, pFriction, colorVals, strokeWeight));
   }
 }
 class Particle {
 
-  int strokeWeight;
+  int strokeWeight,
+      t = 0; // Time
   PVector position, // The x, y pixel coordinates of the particle
           velocity, // Velocity in pixels per frame of the particle
-          acceleration; // Acceleration in pixels per frame squared
-  float friction; // Amount of friction acting on the particle
+          acceleration,
+          newPosition; // Acceleration in pixels per frame squared
+  float friction,
+        slope,
+        angle,
+        frequency,
+        amplitude; // Amount of friction acting on the particle
   float[] colorVals;
   
-  Particle(PVector position_, PVector velocity_, PVector acceleration_, float friction_, float[] colorVals_, int strokeWeight_) {
+  Particle(PVector position_, PVector velocity_, PVector acceleration_, float frequency_, float amplitude_, float friction_, float[] colorVals_, int strokeWeight_) {
     
     colorVals = colorVals_;
     strokeWeight = strokeWeight_;
@@ -179,6 +187,10 @@ class Particle {
     velocity = velocity_;
     acceleration = acceleration_;
     friction = friction_;
+    frequency = frequency_;
+    amplitude = amplitude_;
+    slope = position.x / position.y;
+    angle = degrees(atan(slope));
   }
   
   public void draw() {
@@ -192,9 +204,20 @@ class Particle {
   }
   
   public void update() {
-    acceleration.mult(friction);
     velocity.add(acceleration);
     position.add(velocity);
+    position.mult(friction);
+    oscillate();
+  }
+
+  public void oscillate() {
+
+    slope = position.x / position.y;
+    angle = degrees(atan(slope));
+    newPosition = new PVector(amplitude * cos(angle), amplitude * sin(angle));
+
+    position.add(newPosition);
+
   }
 }
 class RNG {
@@ -212,7 +235,7 @@ class RNG {
   
 }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "Emitters" };
+    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#666666", "--stop-color=#cccccc", "Emitters" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

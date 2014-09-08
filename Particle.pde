@@ -1,13 +1,19 @@
 class Particle {
 
-  int strokeWeight;
+  int strokeWeight,
+      t = 0; // Time
   PVector position, // The x, y pixel coordinates of the particle
           velocity, // Velocity in pixels per frame of the particle
-          acceleration; // Acceleration in pixels per frame squared
-  float friction; // Amount of friction acting on the particle
+          acceleration,
+          newPosition; // Acceleration in pixels per frame squared
+  float friction,
+        slope,
+        angle,
+        frequency,
+        amplitude; // Amount of friction acting on the particle
   float[] colorVals;
   
-  Particle(PVector position_, PVector velocity_, PVector acceleration_, float friction_, float[] colorVals_, int strokeWeight_) {
+  Particle(PVector position_, PVector velocity_, PVector acceleration_, float frequency_, float amplitude_, float friction_, float[] colorVals_, int strokeWeight_) {
     
     colorVals = colorVals_;
     strokeWeight = strokeWeight_;
@@ -15,6 +21,10 @@ class Particle {
     velocity = velocity_;
     acceleration = acceleration_;
     friction = friction_;
+    frequency = frequency_;
+    amplitude = amplitude_;
+    slope = position.x / position.y;
+    angle = degrees(atan(slope));
   }
   
   void draw() {
@@ -28,8 +38,19 @@ class Particle {
   }
   
   void update() {
-    acceleration.mult(friction);
     velocity.add(acceleration);
     position.add(velocity);
+    position.mult(friction);
+    oscillate();
+  }
+
+  void oscillate() {
+
+    slope = position.x / position.y;
+    angle = degrees(atan(slope));
+    newPosition = new PVector(amplitude * cos(angle), amplitude * sin(angle));
+
+    position.add(newPosition);
+
   }
 }
