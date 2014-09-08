@@ -36,8 +36,6 @@ public void initEmitters() {
    emitters[i] = new Emitter(new PVector(0, 0), new PVector(random(-0.02f, 0.02f),0), new PVector(0, 0), new PVector(3.0f,3.0f), new PVector(1.0f, 1.0f), new PVector(0.02f, 0.02f), new PVector(0.1f, 0.1f), random(0.96f, 0.99f), random(50, 100), new ColorCycle(random(0.2f, 0.4f), 0, 2, 4, random(50, 255)));
   
   }
-  
-  
 }
 
 public void draw() {
@@ -189,8 +187,8 @@ class Particle {
     friction = friction_;
     frequency = frequency_;
     amplitude = amplitude_;
-    slope = position.x / position.y;
-    angle = degrees(atan(slope));
+    slope = velocity.x / velocity.y;
+    angle = atan(slope);
   }
   
   public void draw() {
@@ -199,25 +197,18 @@ class Particle {
     strokeWeight(strokeWeight);
     stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
     popMatrix();
+    pushMatrix();
+    rotate(radians(angle));
+    position.add(new PVector(0, sin(t * frequency) * amplitude));
     point(position.x, position.y);
-
+    popMatrix();
+    t++;
   }
   
   public void update() {
     velocity.add(acceleration);
     position.add(velocity);
     position.mult(friction);
-    oscillate();
-  }
-
-  public void oscillate() {
-
-    slope = position.x / position.y;
-    angle = degrees(atan(slope));
-    newPosition = new PVector(amplitude * cos(angle), amplitude * sin(angle));
-
-    position.add(newPosition);
-
   }
 }
 class RNG {

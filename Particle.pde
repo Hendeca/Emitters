@@ -23,8 +23,8 @@ class Particle {
     friction = friction_;
     frequency = frequency_;
     amplitude = amplitude_;
-    slope = position.x / position.y;
-    angle = degrees(atan(slope));
+    slope = velocity.x / velocity.y;
+    angle = atan(slope);
   }
   
   void draw() {
@@ -33,24 +33,17 @@ class Particle {
     strokeWeight(strokeWeight);
     stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
     popMatrix();
+    pushMatrix();
+    rotate(radians(angle));
+    position.add(new PVector(0, sin(t * frequency) * amplitude));
     point(position.x, position.y);
-
+    popMatrix();
+    t++;
   }
   
   void update() {
     velocity.add(acceleration);
     position.add(velocity);
     position.mult(friction);
-    oscillate();
-  }
-
-  void oscillate() {
-
-    slope = position.x / position.y;
-    angle = degrees(atan(slope));
-    newPosition = new PVector(amplitude * cos(angle), amplitude * sin(angle));
-
-    position.add(newPosition);
-
   }
 }
