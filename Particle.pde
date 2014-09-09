@@ -1,29 +1,30 @@
 class Particle {
 
   int strokeWeight,
-      t = 0,
-      savedTime = millis(); // Time
-  PVector position, // The x, y pixel coordinates of the particle
+      t = 0;
+  PVector position,
           velocity,
-          sineVel; // Acceleration in pixels per frame squared
-  float friction, // Amount of friction acting on the particle
+          sineVel;
+  float friction,
         frequency,
+        period,
         amplitude,
         angle,
         acceleration,
-        fadeRate = 3;
-  float[] colorVals;
+        fadeRate;
+  float[] particleColors;
   
-  Particle(PVector position_, float velocity_, float acceleration_, float angle_, float frequency_, float amplitude_, float friction_, float[] colorVals_, int strokeWeight_) {
+  Particle(PVector position_, float velocity_, float acceleration_, float angle_, float fadeRate_, float period_, float amplitude_, float friction_, float[] particleColors_, int strokeWeight_) {
     
-    colorVals = colorVals_;
+    particleColors = particleColors_;
     strokeWeight = strokeWeight_;
     position = position_;
     angle = angle_;
     velocity = new PVector(velocity_ * sin(angle), velocity_ * cos(angle));
     acceleration = acceleration_;
+    fadeRate = fadeRate_;
     friction = friction_;
-    frequency = frequency_;
+    period = period_;
     amplitude = amplitude_;
   }
   
@@ -31,7 +32,8 @@ class Particle {
     pushMatrix();
     strokeWeight(strokeWeight);
     translate(position.x, position.y);
-    stroke(colorVals[0], colorVals[1], colorVals[2], colorVals[3]);
+    fade();
+    stroke(particleColors[0], particleColors[1], particleColors[2], particleColors[3]);
     point(0, 0);
     popMatrix();
     t++;
@@ -48,18 +50,31 @@ class Particle {
 
   void oscillate() {
 
-    sineVel = new PVector((amplitude * sin((angle + 90)) * sin(t / (1 / frequency))), (amplitude * cos((angle + 90)) * sin(t / (1 / frequency))));
+    frequency = 1 / period;
+    sineVel = new PVector((amplitude * (sin((angle + 90)))) * sin(t * frequency) , (amplitude * (cos((angle + 90)))) * sin(t * frequency));
     position.add(sineVel);
 
   }
 
   void fade() {
-    colorVals[3] -= fadeRate;
+
+    if(particleColors[3] <= 30) {
+      particleColors[3] = 30;
+      fadeRate *= -1;
+    }
+
+    if(particleColors[3] >= 200) {
+      particleColors[3] = 200;
+      fadeRate *= -1;
+    }
+
+    particleColors[3] -= fadeRate;
+
   }
 
-  void updateColor(float[] colorVals_) {
+  void updateColor(float[] particleColors_) {
 
-    colorVals = colorVals_;
+    particleColors = particleColors_;
 
   }
 }
