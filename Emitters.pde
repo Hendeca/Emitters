@@ -57,7 +57,7 @@ void initEmitters() {
 
   for ( i = 0; i < totalNodes; i++) {
 
-    emitters[i] = new Emitter(startPoints[i], new PVector(random(0, 0),0), new PVector(0, 0), random(0.995, 0.999), 5, angles[i], new ColorCycle(random(0.4, 0.5), 0, 2, 4, random(220, 255)));
+    emitters[i] = new Emitter(startPoints[i], new PVector(random(0, 0),0), new PVector(0, 0), random(0.995, 0.999), 5, angles[i], new ColorCycle(random(0.4, 0.5), 0, 2, 4, random(20, 50)));
 
   }
 }
