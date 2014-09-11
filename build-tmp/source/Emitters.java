@@ -73,7 +73,7 @@ public void initEmitters() {
 
   for ( i = 0; i < totalNodes; i++) {
 
-    emitters[i] = new Emitter(startPoints[i], new PVector(random(0, 0),0), new PVector(0, 0), random(0.995f, 0.999f), 5, angles[i], new ColorCycle(random(0.4f, 0.5f), 0, 2, 4, random(20, 50)));
+    emitters[i] = new Emitter(startPoints[i], new PVector(random(0, 0),0), new PVector(0, 0), random(0.995f, 0.999f), 5, angles[i], new ColorCycle(random(0.4f, 0.5f), 0, 2, 4, random(220, 255)));
 
   }
 }
@@ -192,7 +192,7 @@ class Emitter {
       float pVelocity = random(8.1f, 10);
       float pAcceleration = random(-0.02f, 0.02f);
       float pFriction = friction;
-      float pPeriod = 3;
+      float pPeriod = 1;
       float pAmplitude = 20;
       float pAngle = angleDivisor;
       float pFadeRate = 10;
