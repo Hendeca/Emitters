@@ -70,5 +70,5 @@ void draw() {
     emitters[i].draw();
     popMatrix();
   }
-  //saveFrame("TriangleShimmer3/frames######.png");
+  //saveFrame("TrianglePulse/frames######.png");
 }
