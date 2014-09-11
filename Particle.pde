@@ -3,14 +3,17 @@ class Particle {
   int strokeWeight,
       t = 0;
   PVector position,
-          velocity,
-          sineVel;
+          perpendicular,
+          center;
   float friction,
+        velocity,
         frequency,
         period,
         amplitude,
         angle,
+        newAngle,
         acceleration,
+        oscillation,
         fadeRate;
   float[] particleColors;
   
@@ -19,41 +22,44 @@ class Particle {
     particleColors = particleColors_;
     strokeWeight = strokeWeight_;
     position = position_;
-    angle = angle_;
-    velocity = new PVector(velocity_ * sin(angle), velocity_ * cos(angle));
+    angle = radians(angle_);
+    velocity = velocity_;
     acceleration = acceleration_;
     fadeRate = fadeRate_;
     friction = friction_;
     period = period_;
     amplitude = amplitude_;
+    center = new PVector(width/2, height/2);
   }
   
   void draw() {
     pushMatrix();
     strokeWeight(strokeWeight);
-    translate(position.x, position.y);
     fade();
     stroke(particleColors[0], particleColors[1], particleColors[2], particleColors[3]);
-    point(0, 0);
+    point(position.x + perpendicular.x, position.y + perpendicular.y);
     popMatrix();
     t++;
   }
   
   void update() {
 
-    position.add(velocity);
+    position.x += cos(angle) * velocity;
+    position.y += sin(angle) * velocity;
+
+    perpendicular = getPerpVector(new PVector(cos(angle) * velocity, sin(angle) * velocity));
+
+    perpendicular.normalize();
+    perpendicular.mult(sin(t / period) * amplitude);
+
     if(friction > 0) {
       position.mult(friction);
     }
     
   }
 
-  void oscillate() {
-
-    frequency = 1 / period;
-    sineVel = new PVector((amplitude * (sin((angle + 90)))) * sin(t * frequency) , (amplitude * (cos((angle + 90)))) * sin(t * frequency));
-    position.add(sineVel);
-
+  PVector getPerpVector(PVector v) {
+    return new PVector(-v.y, v.x);
   }
 
   void fade() {
