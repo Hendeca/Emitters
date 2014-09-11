@@ -192,7 +192,7 @@ class Emitter {
       float pVelocity = random(8.1f, 10);
       float pAcceleration = random(-0.02f, 0.02f);
       float pFriction = friction;
-      float pPeriod = 1;
+      float pPeriod = 2;
       float pAmplitude = 20;
       float pAngle = angleDivisor;
       float pFadeRate = 10;
