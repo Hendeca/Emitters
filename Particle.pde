@@ -35,7 +35,6 @@ class Particle {
   void draw() {
     pushMatrix();
     strokeWeight(strokeWeight);
-    fade();
     stroke(particleColors[0], particleColors[1], particleColors[2], particleColors[3]);
     point(position.x + perpendicular.x, position.y + perpendicular.y);
     popMatrix();
@@ -64,14 +63,18 @@ class Particle {
 
   void fade() {
 
-    if(particleColors[3] <= 30) {
-      particleColors[3] = 30;
-      fadeRate *= -1;
+    if(particleColors[3] <= 60) {
+      particleColors[3] = 60;
+      if(fadeRate < 0) {
+        fadeRate *= -1;
+      }
     }
 
-    if(particleColors[3] >= 200) {
-      particleColors[3] = 200;
-      fadeRate *= -1;
+    if(particleColors[3] >= 255) {
+      particleColors[3] = 248;
+      if(fadeRate > 0) {
+        fadeRate *= -1;
+      }
     }
 
     particleColors[3] -= fadeRate;
