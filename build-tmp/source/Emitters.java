@@ -14,15 +14,16 @@ import java.io.IOException;
 
 public class Emitters extends PApplet {
 
-int i = 0; // For looping
-float triangleSide = 500;
-int nodesPerSide = 19;// Multiply it by three for three sides of the triangle. Add three for the three corner nodes
-int totalNodes = (nodesPerSide * 3) + 3;
-int cornerIterations = nodesPerSide + 1;
-float startingAngle = 270;
-float angleIncrement = 360 / totalNodes;
-float triangleRadius = (0.5f * sqrt(3) * triangleSide) / 2;
-float triangleSegment = (triangleSide / nodesPerSide);
+int nodesPerSide = 19,
+    totalNodes = (nodesPerSide * 3) + 3, // Multiply it by three for three sides of the triangle. Add three for the three corner nodes
+    cornerIterations = nodesPerSide + 1,
+    i = 0; // For looping;
+
+float triangleSide = 500, // Size in pixels of one side of the triangle
+      startingAngle = 270, // Starting angle of projection for the emitters
+      angleIncrement = 360 / totalNodes, // Amount to increment the angle by every node
+      triangleRadius = (0.5f * sqrt(3) * triangleSide) / 2, // Distance from center to closest edge of triangle
+      triangleSegment = (triangleSide / nodesPerSide); // Length of segment between two nodes
 Emitter[] emitters;
 PVector[] startPoints = new PVector[totalNodes];
 float[] angles = new float[totalNodes],
@@ -30,7 +31,7 @@ float[] angles = new float[totalNodes],
 
 public void setup() {
   frameRate(29.97f);
-  size(2560, 1440);
+  size(1440, 900);
   background(0);
   emitters = new Emitter[totalNodes];
 
@@ -290,7 +291,7 @@ class Particle {
   }
 }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "Emitters" };
+    String[] appletArgs = new String[] { "--full-screen", "--bgcolor=#666666", "--stop-color=#cccccc", "Emitters" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {

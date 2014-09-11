@@ -15,7 +15,7 @@ float[] angles = new float[totalNodes],
 
 void setup() {
   frameRate(29.97);
-  size(2560, 1440);
+  size(1440, 900);
   background(0);
   emitters = new Emitter[totalNodes];
 
