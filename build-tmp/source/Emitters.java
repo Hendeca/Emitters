@@ -86,7 +86,7 @@ public void draw() {
     emitters[i].update();
     emitters[i].draw();
     popMatrix();
-    //saveFrame("RainbowPartSmall/frames######.png");
+    //saveFrame("TriangleShimmer/frames######.png");
   }  
 }
 class ColorCycle {
