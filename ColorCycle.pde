@@ -1,3 +1,29 @@
+/* ##############################################
+  
+          ColorCycle Class
+          ----------------
+  Cycles through pretty rainbow colors!
+  Takes 5 arguments:
+    Frequency - How quickly the color changes
+    R,G,B Offsets - How much to offset the RGB
+      values in order to make a rainbow! If 
+      you're not sure what to put here, I
+      recommend the values 0, 2, and 4
+      respectively
+    Alpha - The transparency of the color
+
+  Update() returns an array of rgba values
+    for use with Processing's colors
+
+  Future plans: 
+    -Switch over to using the color class
+    -Overload constructor for default
+      values
+    -Experiment with controlling other
+      variables
+
+############################################## */
+
 class ColorCycle {
   
   int i = 0;
