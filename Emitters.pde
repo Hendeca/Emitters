@@ -1,7 +1,16 @@
 int nodesPerSide = 19, // Number of Emitters per side (not including corners)
     totalNodes = (nodesPerSide * 3) + 3, // Multiply it by three for three sides of the triangle. Add three for the three corner nodes
     cornerIterations = nodesPerSide + 1, // This is used for calculating where corners are when looping through the nodes
-    i = 0; // For looping
+    i = 0, // For looping
+    bpm = 120, // Beats per minute modulation
+    ms = 1000 / (bpm / 60), // Convert beats per minute to beats per millisecond
+    savedTime = millis(), // Capture the time at the start of the sketch
+    pulseLength = 400, // Amount of time stroke increase takes in milliseconds
+    particleWeight = 4,
+    particleWeightMin = 4,
+    particleWeightMax = 12,
+    particleWeightDir = 1,
+    particleWeightPeriod = pulseLength / (particleWeightMax - particleWeightMin);
 
 float triangleSide = 500, // Size in pixels of one side of the triangle
       startingAngle = 270, // Starting angle of projection for the emitters
@@ -76,6 +85,14 @@ void draw() {
 
   // Clear screen and draw each emitter
   background(0);
+
+  if((millis() - savedTime) > ms && (millis() - savedTime) < (ms + pulseLength)) {
+    pulse();
+  } else if( (millis() - savedTime) > (ms + pulseLength) ) {
+    resetPulse();
+  }
+
+  strokeWeight(particleWeight);
   for ( i = 0; i < emitters.length; i++) {
     pushMatrix();
     translate(width / 2, height / 2);
@@ -84,4 +101,27 @@ void draw() {
     popMatrix();
   }
   //saveFrame("TrianglePulse/frames######.png");
+}
+
+void resetPulse() {
+  particleWeight = 4;
+  savedTime = millis();
+
+}
+
+void pulse() { 
+
+  if(particleWeight < particleWeightMin) {
+    particleWeightDir *= -1;
+  } else if(particleWeight > particleWeightMax) {
+    particleWeightDir *= -1;
+  }
+  
+  int currentTime = (millis() - savedTime) - ms;
+
+  if(currentTime > 100) {
+    particleWeight = (int) particleWeightMax - ((particleWeightMax - particleWeightMin) * (currentTime % pulseLength) / pulseLength );
+  } else {
+    particleWeight = (int) particleWeightMin + ((particleWeightMax - particleWeightMin) * (currentTime % pulseLength) / pulseLength );
+  }
 }

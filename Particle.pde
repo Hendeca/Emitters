@@ -34,7 +34,7 @@ class Particle {
 
     // Draw the Particle relative to the center of the screen which the proper color
     pushMatrix();
-    strokeWeight(strokeWeight);
+    //strokeWeight(strokeWeight);
     stroke(particleColors[0], particleColors[1], particleColors[2], particleColors[3]);
     point(position.x + perpendicular.x, position.y + perpendicular.y);
     popMatrix();
